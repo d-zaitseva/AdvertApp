@@ -1,4 +1,5 @@
 ﻿using AdvertApp.ApplicationServices.Contracts;
+using AdvertApp.Models;
 using AdvertApp.Models.Enums;
 using AdvertApp.Models.FormModels;
 using AdvertApp.Models.ViewModels;
@@ -9,11 +10,13 @@ public class AdvertApplicationService : IAdvertApplicationService
 {
     private readonly ILogger<IAdvertApplicationService> _logger;
     private readonly IConfiguration _configuration;
+    private readonly SettingsPerUserOptions settingsOptions = new();
 
     public AdvertApplicationService(ILogger<IAdvertApplicationService> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
+        _configuration.Bind(nameof(SettingsPerUserOptions), settingsOptions);
     }
 
     /// <inheritdoc />
@@ -29,7 +32,7 @@ public class AdvertApplicationService : IAdvertApplicationService
             Number = 1,
             UserId = Guid.NewGuid(),
             Text = "Some text here",
-            Rating = 3,
+            Rating = settingsOptions.MaxAdvertAmount,
             CreatedAt = DateTime.Now,
             Status = AdvertStatus.Active
         });
