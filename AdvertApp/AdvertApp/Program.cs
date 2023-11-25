@@ -1,8 +1,12 @@
+using AdvertApp.ApplicationServices.Contracts;
+using AdvertApp.ApplicationServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IAdvertApplicationService, AdvertApplicationService>();
 
 var app = builder.Build();
 
