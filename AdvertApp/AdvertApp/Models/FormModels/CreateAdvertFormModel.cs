@@ -1,4 +1,6 @@
-﻿namespace AdvertApp.Models.FormModels;
+﻿using Newtonsoft.Json;
+
+namespace AdvertApp.Models.FormModels;
 
 public class CreateAdvertFormModel
 {
@@ -23,6 +25,7 @@ public class CreateAdvertFormModel
         Text = text;
     }
 
+    [JsonConstructor]
     public CreateAdvertFormModel(Guid userId, string text, IFormFile image)
     {
         UserId = userId;

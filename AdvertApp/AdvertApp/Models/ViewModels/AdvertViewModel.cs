@@ -1,4 +1,6 @@
 ﻿using AdvertApp.Models.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace AdvertApp.Models.ViewModels;
 
@@ -52,5 +54,7 @@ public class AdvertViewModel
     /// <summary>
     /// Advert status.
     /// </summary>
+    /// 
+    [JsonConverter(typeof(StringEnumConverter))]
     public AdvertStatus Status { get; set; }
 }

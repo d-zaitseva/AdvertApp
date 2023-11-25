@@ -1,4 +1,6 @@
-﻿namespace AdvertApp.Models.FormModels;
+﻿using Newtonsoft.Json;
+
+namespace AdvertApp.Models.FormModels;
 
 public class DeleteAdvertFormModel
 {
@@ -12,6 +14,7 @@ public class DeleteAdvertFormModel
     /// </summary>
     public Guid UserId { get; private set; }
 
+    [JsonConstructor]
     public DeleteAdvertFormModel(Guid advertId, Guid userId)
     {
         AdvertId = advertId;
