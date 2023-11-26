@@ -3,6 +3,7 @@ using AdvertApp.EF.Entities;
 using AdvertApp.Models;
 using AdvertApp.Models.Enums;
 using AdvertApp.Repositories.Contracts;
+using Microsoft.EntityFrameworkCore;
 namespace AdvertApp.Repositories;
 
 public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
@@ -16,6 +17,7 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
 
     public async Task<IEnumerable<Advert>> GetAllAsync()
     {
+        //return await _context.Adverts.ToListAsync();
         var collection = new List<Advert>();
 
         collection.Add(new Advert
@@ -44,6 +46,7 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
 
     public async  Task<Advert?> GetByIdAsync(Guid id)
     {
+        //return await _context.Adverts.FirstOrDefaultAsync(a => a.Id == id);
         return new Advert
         {
             Id = id,
@@ -58,6 +61,7 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
 
     public async Task<IEnumerable<Advert>> GetByUserIdAsync(Guid userId)
     {
+        //return await _context.Adverts.Where(a => a.UserId == userId).ToListAsync();
         var collection = new List<Advert>();
 
         collection.Add(new Advert
