@@ -24,7 +24,7 @@ public class AdvertViewModel
     /// <summary>
     /// Advert text.
     /// </summary>
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
 
     /// <summary>
     /// Image file.
