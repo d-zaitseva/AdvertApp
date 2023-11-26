@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdvertApp.EF;
 
-public class AdvertContext : DbContext
+public class AdvertContext : DbContext, IAdvertContext
 {
     public DbSet<Advert> Adverts { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
