@@ -4,7 +4,7 @@ namespace AdvertApp.Repositories.Contracts;
 
 public interface IAdvertWriteRepository
 {
-    Task Create(Advert advert);
+    Task CreateAsync(Advert advert);
 
     void CommitChanges();
 }

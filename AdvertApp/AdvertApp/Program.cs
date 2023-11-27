@@ -12,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAdvertApplicationService, AdvertApplicationService>();
+builder.Services.AddScoped<IImageApplicationService, ImageApplicationService>();
 
 builder.Services.AddScoped<IAdvertContext, AdvertContext>();
 

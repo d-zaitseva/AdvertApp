@@ -1,4 +1,5 @@
 ﻿using AdvertApp.ApplicationServices.Contracts;
+using AdvertApp.EF.Entities;
 using AdvertApp.Models;
 using AdvertApp.Models.Enums;
 using AdvertApp.Models.FormModels;
@@ -15,13 +16,15 @@ public class AdvertApplicationService : IAdvertApplicationService
     private readonly ILogger<IAdvertApplicationService> _logger;
     private readonly IConfiguration _configuration;
     private readonly SettingsPerUserOptions settingsOptions = new();
+    private readonly IImageApplicationService _imageApplicationService;
 
     public AdvertApplicationService(
         IAdvertReadRepository advertReadRepository,
         IAdvertWriteRepository advertWriteRepository,
         IUserRepository userRepository,
         ILogger<IAdvertApplicationService> logger,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IImageApplicationService imageApplicationService)
     {
         _advertReadRepository = advertReadRepository;
         _advertWriteRepository = advertWriteRepository;
@@ -29,6 +32,7 @@ public class AdvertApplicationService : IAdvertApplicationService
         _logger = logger;
         _configuration = configuration;
         _configuration.Bind(nameof(SettingsPerUserOptions), settingsOptions);
+        _imageApplicationService = imageApplicationService;
     }
 
     /// <inheritdoc />
@@ -70,21 +74,49 @@ public class AdvertApplicationService : IAdvertApplicationService
     public async Task<AdvertViewModel> AddAsync(CreateAdvertFormModel model)
     {
         // check if user with userId can add advert (compare with max Advert amount from settings)
-        // get all adverts by userId and count amount
-        
-        //save new advert
-        var advert = new AdvertViewModel
+        var userAdverts = await _advertReadRepository.GetByUserIdAsync(model.UserId);
+        if (userAdverts.Count() < settingsOptions.MaxAdvertAmount)
         {
-            Id = Guid.NewGuid(),
-            Number = 3,
-            UserId = model.UserId,
-            Text = model.Text,
-            Rating = 5,
-            CreatedAt = DateTime.Now,
-            Status = AdvertStatus.Active
-        };
+            Image? image = model.Image != null 
+                ? _imageApplicationService.ConvertFormFileToImage(model.Image)
+                : null;
 
-        return advert;
+            var advert = new Advert
+            {
+                Id = Guid.NewGuid(),
+                UserId = model.UserId,
+                Text = model.Text,
+                ImageId = image?.Id,
+                Image = image,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Status = AdvertStatus.Active
+            };
+
+            await _advertWriteRepository.CreateAsync(advert);
+            _advertWriteRepository.CommitChanges();
+
+            var newAdvert = await _advertReadRepository.GetByIdAsync(advert.Id);
+            return newAdvert != null
+                ? new AdvertViewModel
+                {
+                    Id = newAdvert.Id,
+                    Number = newAdvert.Number,
+                    UserId = newAdvert.UserId,
+                    Text = newAdvert.Text,
+                    Rating = newAdvert.Rating,
+                    CreatedAt = newAdvert.CreatedAt,
+                    UpdatedAt = newAdvert.UpdatedAt,
+                    ExpiredAt = newAdvert.ExpiredAt,
+                    Status = newAdvert.Status
+                }
+                : new AdvertViewModel();
+
+        }
+        _logger.LogError($" User with Id {model.UserId} exceeded the permissible limit of published adverts ammount." +
+            $"User cannot add new advert.");
+
+        return new AdvertViewModel();
     }
 
     /// <inheritdoc />

@@ -88,9 +88,15 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
         return collection;
     }
 
-    public async Task Create(Advert advert)
+    public async Task CreateAsync(Advert advert)
     {
         await _context.Adverts.AddAsync(advert);
+
+        if (advert.Image != null)
+        {
+            await _context.Images.AddAsync(advert.Image);
+        }
+        
         _context.SaveChanges();
     }
 

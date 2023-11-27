@@ -10,7 +10,7 @@ public class Advert
     public Guid UserId { get; set; }
     public string Text { get; set; } = string.Empty;
     public Image? Image { get; set; } = null;
-    public Guid ImageId { get; set; }
+    public Guid? ImageId { get; set; } = null;
     public int Rating { get; set; } = 0;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
