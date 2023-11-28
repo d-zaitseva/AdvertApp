@@ -4,13 +4,25 @@ using AdvertApp.EF;
 using AdvertApp.Repositories.Contracts;
 using AdvertApp.Repositories;
 using AdvertApp.AutoMapping;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Adverts API",
+        Description = "An ASP.NET Core Web API for managing Adverts",
+    });
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 builder.Services.AddScoped<IAdvertApplicationService, AdvertApplicationService>();
 builder.Services.AddScoped<IImageApplicationService, ImageApplicationService>();

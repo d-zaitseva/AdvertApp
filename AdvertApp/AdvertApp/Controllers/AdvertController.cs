@@ -18,7 +18,7 @@ public class AdvertController : Controller
     }
 
     /// <summary>
-    /// Get Collection of Adverts.
+    /// Get Collection of all Adverts.
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
@@ -30,8 +30,13 @@ public class AdvertController : Controller
         return Ok(collection);
     }
 
+    /// <summary>
+    /// Post new advert.
+    /// </summary>
+    /// <param name="model">Model to create new advert.</param>
+    /// <returns></returns>
     [HttpPost(Name = "PostAdvert")]
-    public async Task<IActionResult> Post(CreateAdvertFormModel model)
+    public async Task<IActionResult> Post([FromForm]CreateAdvertFormModel model)
     {
         var response = await _advertApplicationService.AddAsync(model);
 
@@ -43,8 +48,13 @@ public class AdvertController : Controller
         return BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Update existing advert.
+    /// </summary>
+    /// <param name="model">Model to update advert.</param>
+    /// <returns></returns>
     [HttpPut(Name = "PutAdvert")]
-    public async Task<IActionResult> Put(UpdateAdvertFormModel model)
+    public async Task<IActionResult> Put([FromForm]UpdateAdvertFormModel model)
     {
         var response = await _advertApplicationService.Update(model);
 
@@ -56,8 +66,13 @@ public class AdvertController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Delete Advert - change status of the advert into Deleted.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
     [HttpDelete(Name = "DeleteAdvert")]
-    public async Task<ActionResult> Delete (DeleteAdvertFormModel model)
+    public async Task<ActionResult> Delete ([FromBody] DeleteAdvertFormModel model)
     {
         var response = await _advertApplicationService.DeleteAsync(model);
 
