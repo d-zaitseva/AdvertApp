@@ -5,6 +5,7 @@ using AdvertApp.Models.Enums;
 using AdvertApp.Models.FormModels;
 using AdvertApp.Models.ViewModels;
 using AdvertApp.Repositories.Contracts;
+using CSharpFunctionalExtensions;
 
 namespace AdvertApp.ApplicationServices;
 
@@ -71,87 +72,120 @@ public class AdvertApplicationService : IAdvertApplicationService
     }
 
     /// <inheritdoc />
-    public async Task<AdvertViewModel> AddAsync(CreateAdvertFormModel model)
+    public async Task<Result> AddAsync(CreateAdvertFormModel model)
     {
-        // check if user with userId can add advert (compare with max Advert amount from settings)
         var userAdverts = await _advertReadRepository.GetByUserIdAsync(model.UserId);
         if (userAdverts.Count() < settingsOptions.MaxAdvertAmount)
         {
-            Image? image = model.Image != null 
+            Image? image = model.Image != null
                 ? _imageApplicationService.ConvertFormFileToImage(model.Image)
                 : null;
 
-            var advert = new Advert
-            {
-                Id = Guid.NewGuid(),
-                UserId = model.UserId,
-                Text = model.Text,
-                ImageId = image?.Id,
-                Image = image,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                Status = AdvertStatus.Active
-            };
+            var advert = CreateAdvert(model, image);
 
             await _advertWriteRepository.CreateAsync(advert);
             _advertWriteRepository.CommitChanges();
 
-            var newAdvert = await _advertReadRepository.GetByIdAsync(advert.Id);
-            return newAdvert != null
-                ? new AdvertViewModel
-                {
-                    Id = newAdvert.Id,
-                    Number = newAdvert.Number,
-                    UserId = newAdvert.UserId,
-                    Text = newAdvert.Text,
-                    Rating = newAdvert.Rating,
-                    CreatedAt = newAdvert.CreatedAt,
-                    UpdatedAt = newAdvert.UpdatedAt,
-                    ExpiredAt = newAdvert.ExpiredAt,
-                    Status = newAdvert.Status
-                }
-                : new AdvertViewModel();
+            return Result.Success();
 
         }
         _logger.LogError($" User with Id {model.UserId} exceeded the permissible limit of published adverts ammount." +
             $"User cannot add new advert.");
 
-        return new AdvertViewModel();
+        return Result.Failure("The advert cannot be created");
     }
 
     /// <inheritdoc />
-    public async Task<AdvertViewModel> UpdateAsync(UpdateAdvertFormModel model)
+    public async Task<Result> Update(UpdateAdvertFormModel model)
     {
-        //get advert by Id
-        // if model.UserId != advert.UserId -> get user by Id to check UserRole
-        // check userId to validate if can be updated
+        var updatedAdvert = await _advertReadRepository.GetByIdAsync(model.AdvertId);
+        if (updatedAdvert is null)
+        {
+            return Result.Failure($"Advert with Id {model.AdvertId} was not found");
+        }
 
-        // update existing advert with new fields
-        // change UpdatedAt property
-        // save changes
+        if (model.UserId != updatedAdvert.UserId)
+        {
+            var user = await _userRepository.GetByIdAsync(model.UserId);
 
-        var advert = new AdvertViewModel
+            if (user is null)
+            {
+                return Result.Failure($"User with Id {model.UserId} was not found");
+            }
+
+            if (user.Role != UserRole.Admin)
+            {
+                return Result.Failure($"User with Id {model.UserId} cannot update advert with Id {model.AdvertId}");
+            }
+        }
+
+        updatedAdvert.Text = model.Text;
+
+        if (model.Image is not null)
+        {
+            var image = _imageApplicationService.ConvertFormFileToImage(model.Image);
+            updatedAdvert.Image = image;
+        }
+
+        updatedAdvert.UpdatedAt = DateTime.Now;
+        updatedAdvert.Status = model.Status;
+
+        if (model.Status == AdvertStatus.Closed)
+        {
+            updatedAdvert.ExpiredAt = DateTime.Now;
+        }
+
+        _advertWriteRepository.Update(updatedAdvert);
+
+        return Result.Success();
+    }
+
+    /// <inheritdoc />
+    public async Task<Result> DeleteAsync(DeleteAdvertFormModel model)
+    {
+        var deletedAdvert = await _advertReadRepository.GetByIdAsync(model.AdvertId);
+        if (deletedAdvert is null)
+        {
+            return Result.Failure($"Advert with Id {model.AdvertId} was not found");
+        }
+
+        if (model.UserId != deletedAdvert.UserId)
+        {
+            var user = await _userRepository.GetByIdAsync(model.UserId);
+
+            if (user is null)
+            {
+                return Result.Failure($"User with Id {model.UserId} was not found");
+            }
+
+            if (user.Role != UserRole.Admin)
+            {
+                return Result.Failure($"User with Id {model.UserId} cannot delete advert with Id {model.AdvertId}");
+            }
+        }
+
+        deletedAdvert.Status = AdvertStatus.Closed;
+        deletedAdvert.ExpiredAt = DateTime.Now;
+
+        _advertWriteRepository.Update(deletedAdvert);
+
+        return Result.Success();
+    }
+
+    private Advert CreateAdvert(CreateAdvertFormModel model, Image? image)
+    {
+        var createdAdvert = new Advert
         {
             Id = Guid.NewGuid(),
-            Number = 3,
             UserId = model.UserId,
             Text = model.Text,
-            Rating = 5,
+            ImageId = image?.Id,
+            Image = image,
             CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
             Status = AdvertStatus.Active
         };
 
-        return advert;
-    }
-
-    /// <inheritdoc />
-    public async Task DeleteAsync(DeleteAdvertFormModel model)
-    {
-        //get advert by Id
-        // if model.UserId != advert.UserId -> get user by Id to check UserRole
-        // check userId to validate if can be deleted
-
-        // change advert status to closed
-        // save changes
+        return createdAdvert;
     }
 }

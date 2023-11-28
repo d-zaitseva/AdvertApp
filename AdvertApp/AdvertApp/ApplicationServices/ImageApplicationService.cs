@@ -1,5 +1,8 @@
 ﻿using AdvertApp.ApplicationServices.Contracts;
 using AdvertApp.EF.Entities;
+using System.Collections;
+using System.IO;
+using System.Net.Mime;
 
 namespace AdvertApp.ApplicationServices;
 
@@ -22,9 +25,12 @@ public class ImageApplicationService : IImageApplicationService
                 bytes = stream.ToArray();
             }
         }
-
+        
         image.Id = Guid.NewGuid();
-        image.Name = formFile.FileName;
+        image.FileName = formFile.FileName;
+        image.Name = formFile.Name;
+        image.Type = fileType;
+        image.ContentDisposition = formFile.ContentDisposition.ToString();
         image.Data = bytes;
 
         return image;
@@ -33,6 +39,15 @@ public class ImageApplicationService : IImageApplicationService
     /// <inheritdoc />
     public IFormFile ConvertImageToFormFile(Image image)
     {
-        return null;
+        var stream = new MemoryStream(image.Data);
+
+        IFormFile file = new FormFile(stream, 0, image.Data.Length, image.Name, image.FileName)
+        {
+            Headers = new HeaderDictionary(),
+            ContentDisposition = image.ContentDisposition,
+            ContentType = image.Type
+        };
+
+        return file;
     }
 }

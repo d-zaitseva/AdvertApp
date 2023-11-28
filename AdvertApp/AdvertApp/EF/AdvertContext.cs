@@ -34,7 +34,7 @@ public class AdvertContext : DbContext, IAdvertContext
 
             entity.HasOne(a => a.Image)
                 .WithOne(i => i.Advert)
-                .HasForeignKey<Image>(i => i.Id)
+                .HasForeignKey<Advert>(i => i.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 

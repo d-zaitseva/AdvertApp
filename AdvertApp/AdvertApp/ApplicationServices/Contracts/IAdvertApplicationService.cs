@@ -1,5 +1,6 @@
 ﻿using AdvertApp.Models.FormModels;
 using AdvertApp.Models.ViewModels;
+using CSharpFunctionalExtensions;
 
 namespace AdvertApp.ApplicationServices.Contracts;
 
@@ -15,15 +16,15 @@ public interface IAdvertApplicationService
     /// Adds advert.
     /// </summary>
     /// <param name="model">Advert's fields.</param>
-    /// <returns>Created advert.</returns>
-    Task<AdvertViewModel> AddAsync(CreateAdvertFormModel model);
+    /// <returns>Result of the action.</returns>
+    Task<Result> AddAsync(CreateAdvertFormModel model);
 
     /// <summary>
     /// Updates advert.
     /// </summary>
     /// <param name="model">Advert's fields.</param>
-    /// <returns>Updated advert.</returns>
-    Task<AdvertViewModel> UpdateAsync(UpdateAdvertFormModel model);
+    /// <returns>Result of the action..</returns>
+    Task<Result> Update(UpdateAdvertFormModel model);
 
     /// <summary>
     /// Deletes advert by Id.
@@ -31,5 +32,5 @@ public interface IAdvertApplicationService
     /// <param name="id">Advert Id.</param>
     /// /// <param name="userId">User Id who deletes advert.</param>
     /// <returns></returns>
-    Task DeleteAsync(DeleteAdvertFormModel model);
+    Task<Result> DeleteAsync(DeleteAdvertFormModel model);
 }

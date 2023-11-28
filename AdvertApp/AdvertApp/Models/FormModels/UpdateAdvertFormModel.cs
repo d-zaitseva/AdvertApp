@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AdvertApp.Models.Enums;
+using Newtonsoft.Json;
 
 namespace AdvertApp.Models.FormModels;
 
@@ -23,6 +24,11 @@ public class UpdateAdvertFormModel
     /// Advert image file.
     /// </summary>
     public IFormFile? Image { get; private set; }
+
+    /// <summary>
+    /// Advert status.
+    /// </summary>
+    public AdvertStatus Status { get; set; }
 
     public UpdateAdvertFormModel(Guid advertId, Guid userId, string text)
     {

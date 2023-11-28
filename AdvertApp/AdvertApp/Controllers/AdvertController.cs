@@ -17,6 +17,11 @@ public class AdvertController : Controller
         _advertApplicationService = advertApplicationService;
     }
 
+    /// <summary>
+    /// Get Collection of Adverts.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpGet(Name = "GetAdvert")]
     public ActionResult<IEnumerable<AdvertViewModel>> Get(CancellationToken cancellationToken)
     {
@@ -26,25 +31,40 @@ public class AdvertController : Controller
     }
 
     [HttpPost(Name = "PostAdvert")]
-    public async Task<ActionResult<AdvertViewModel>> Post(CreateAdvertFormModel model)
+    public async Task<IActionResult> Post(CreateAdvertFormModel model)
     {
         var response = await _advertApplicationService.AddAsync(model);
 
-        return Ok(response);
+        if (response.IsSuccess)
+        {
+            return Ok();
+        }
+
+        return BadRequest(response.Error);
     }
 
     [HttpPut(Name = "PutAdvert")]
-    public async Task<ActionResult<AdvertViewModel>> Put(UpdateAdvertFormModel model)
+    public async Task<IActionResult> Put(UpdateAdvertFormModel model)
     {
-        var response = await _advertApplicationService.UpdateAsync(model);
+        var response = await _advertApplicationService.Update(model);
 
-        return Ok(response);
+        if (response.IsFailure)
+        {
+            BadRequest(response.Error);
+        }
+
+        return Ok();
     }
 
     [HttpDelete(Name = "DeleteAdvert")]
     public async Task<ActionResult> Delete (DeleteAdvertFormModel model)
     {
-        await _advertApplicationService.DeleteAsync(model);
+        var response = await _advertApplicationService.DeleteAsync(model);
+
+        if (response.IsFailure)
+        {
+            BadRequest(response.Error);
+        }
 
         return Ok();
     }
