@@ -43,7 +43,7 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
     public void Update(Advert advert)
     {
          _context.Adverts.Update(advert);
-
+        // TO DO: case when Image was deleted from advert
         if (advert.Image != null)
         {
             _context.Images.Update(advert.Image);

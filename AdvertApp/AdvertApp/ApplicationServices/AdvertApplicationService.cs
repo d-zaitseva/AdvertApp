@@ -5,6 +5,7 @@ using AdvertApp.Models.Enums;
 using AdvertApp.Models.FormModels;
 using AdvertApp.Models.ViewModels;
 using AdvertApp.Repositories.Contracts;
+using AutoMapper;
 using CSharpFunctionalExtensions;
 
 namespace AdvertApp.ApplicationServices;
@@ -18,6 +19,7 @@ public class AdvertApplicationService : IAdvertApplicationService
     private readonly IConfiguration _configuration;
     private readonly SettingsPerUserOptions settingsOptions = new();
     private readonly IImageApplicationService _imageApplicationService;
+    private readonly IMapper _mapper;
 
     public AdvertApplicationService(
         IAdvertReadRepository advertReadRepository,
@@ -25,7 +27,8 @@ public class AdvertApplicationService : IAdvertApplicationService
         IUserRepository userRepository,
         ILogger<IAdvertApplicationService> logger,
         IConfiguration configuration,
-        IImageApplicationService imageApplicationService)
+        IImageApplicationService imageApplicationService,
+        IMapper mapper)
     {
         _advertReadRepository = advertReadRepository;
         _advertWriteRepository = advertWriteRepository;
@@ -34,32 +37,27 @@ public class AdvertApplicationService : IAdvertApplicationService
         _configuration = configuration;
         _configuration.Bind(nameof(SettingsPerUserOptions), settingsOptions);
         _imageApplicationService = imageApplicationService;
+        _mapper = mapper;
     }
 
     /// <inheritdoc />
     public async Task<IEnumerable<AdvertViewModel>> GetAllAsync(CancellationToken cancellationToke)
     {
         var collection = new List<AdvertViewModel>();
-        // get list of all adverts.
+
         var result = await _advertReadRepository.GetAllAsync();
         if (result.Any())
         {
             foreach (var item in result)
             {
-                // add Image convert to IFormFile
-                collection.Add(new AdvertViewModel
+                var avm = _mapper.Map<AdvertViewModel>(item);
+                if (item.Image is not null)
                 {
-                    Id = item.Id,
-                    Number = item.Number,
-                    UserId = item.UserId,
-                    Text = item.Text,
-                    Image = null,
-                    Rating = item.Rating,
-                    CreatedAt = item.CreatedAt,
-                    UpdatedAt = item.UpdatedAt,
-                    ExpiredAt = item.ExpiredAt,
-                    Status = item.Status
-                });
+                    var image = _imageApplicationService.ConvertImageToFormFile(item.Image);
+                    avm.Image = image;
+                }
+
+                collection.Add(avm);
             }
         }
 
@@ -125,6 +123,10 @@ public class AdvertApplicationService : IAdvertApplicationService
         {
             var image = _imageApplicationService.ConvertFormFileToImage(model.Image);
             updatedAdvert.Image = image;
+        }
+        else
+        {
+            updatedAdvert.Image = null;
         }
 
         updatedAdvert.UpdatedAt = DateTime.Now;

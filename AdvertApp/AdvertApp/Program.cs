@@ -3,6 +3,7 @@ using AdvertApp.ApplicationServices;
 using AdvertApp.EF;
 using AdvertApp.Repositories.Contracts;
 using AdvertApp.Repositories;
+using AdvertApp.AutoMapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddScoped<IAdvertContext, AdvertContext>();
 builder.Services.AddScoped<IAdvertReadRepository, AdvertRepository>();
 builder.Services.AddScoped<IAdvertWriteRepository, AdvertRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 var app = builder.Build();
 
