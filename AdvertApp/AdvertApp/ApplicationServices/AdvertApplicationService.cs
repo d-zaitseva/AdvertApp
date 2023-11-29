@@ -77,11 +77,12 @@ public class AdvertApplicationService : IAdvertApplicationService
     public async Task<Result> AddAsync(CreateAdvertFormModel model)
     {
         var userAdverts = await _advertReadRepository.GetByUserIdAsync(model.UserId);
+
         var user = await _userApplicationService.GetByIdAsync(model.UserId);
         if (user == null) 
         {
             _logger.LogError($"User with Id {model.UserId} doesn't exist");
-            Result.Failure("User not found");
+            return Result.Failure("User not found");
         }
 
         if (userAdverts.Count() < settingsOptions.MaxAdvertAmount)
