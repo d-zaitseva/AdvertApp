@@ -7,17 +7,10 @@ public class DeleteAdvertFormModel
     /// <summary>
     /// Advert Id that should be deleted.
     /// </summary>
-    public Guid AdvertId { get; private set; }
+    public Guid AdvertId { get; set; }
 
     /// <summary>
     /// UserId who deletes advert.
     /// </summary>
-    public Guid UserId { get; private set; }
-
-    [JsonConstructor]
-    public DeleteAdvertFormModel(Guid advertId, Guid userId)
-    {
-        AdvertId = advertId;
-        UserId = userId;
-    }
+    public Guid UserId { get; set; }
 }

@@ -14,6 +14,6 @@ public class Advert
     public int Rating { get; set; } = 0;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    public DateTime ExpiredAt { get; set; }
+    public DateTime? ExpiredAt { get; set; } = null;
     public AdvertStatus Status { get; set; }
 }

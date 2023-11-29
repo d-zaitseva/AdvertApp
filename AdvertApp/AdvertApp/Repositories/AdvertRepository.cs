@@ -44,7 +44,7 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
 
     public void Update(Advert advert)
     {
-         _context.Adverts.Update(advert);
+        _context.Adverts.Update(advert);
         // TO DO: case when Image was deleted from advert
         if (advert.Image != null)
         {
@@ -52,6 +52,15 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
         }
 
         _context.SaveChanges();
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var advert = await _context.Adverts.FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+        if (advert != null)
+        {
+            _context.Adverts.Remove(advert);
+        }
     }
 
     public void CommitChanges()

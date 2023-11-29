@@ -30,7 +30,7 @@ public class AdvertContext : DbContext, IAdvertContext
             entity.HasOne(a => a.User)
                 .WithMany(a => a.Adverts)
                 .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             entity.HasOne(a => a.Image)
                 .WithOne(i => i.Advert)
@@ -47,6 +47,10 @@ public class AdvertContext : DbContext, IAdvertContext
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(u => u.Id);
+            entity.HasMany(u => u.Adverts)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<User>().HasData(

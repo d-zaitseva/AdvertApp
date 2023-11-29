@@ -186,7 +186,6 @@ public class AdvertApplicationService : IAdvertApplicationService
             Image = image,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
-            ExpiredAt = new DateTime(2050, 1, 1),
             Status = AdvertStatus.Active
         };
 
