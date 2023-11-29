@@ -13,9 +13,11 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Advert>> GetAllAsync()
+    public async Task<IEnumerable<Advert>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _context.Adverts.ToListAsync();
+        return await _context.Adverts
+            .Include(a => a.Image)
+            .ToListAsync(cancellationToken);
     }
 
     public async  Task<Advert?> GetByIdAsync(Guid id)

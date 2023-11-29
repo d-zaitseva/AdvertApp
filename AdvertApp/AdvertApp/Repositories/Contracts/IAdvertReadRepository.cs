@@ -4,7 +4,7 @@ namespace AdvertApp.Repositories.Contracts;
 
 public interface IAdvertReadRepository
 {
-    Task<IEnumerable<Advert>> GetAllAsync();
+    Task<IEnumerable<Advert>> GetAllAsync(CancellationToken cancellationToken);
 
     Task<Advert?> GetByIdAsync(Guid id);
 

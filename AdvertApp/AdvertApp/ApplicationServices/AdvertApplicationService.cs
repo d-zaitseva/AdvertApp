@@ -41,16 +41,17 @@ public class AdvertApplicationService : IAdvertApplicationService
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<AdvertViewModel>> GetAllAsync(CancellationToken cancellationToke)
+    public async Task<IEnumerable<AdvertViewModel>> GetAllAsync(CancellationToken cancellationToken)
     {
         var collection = new List<AdvertViewModel>();
 
-        var result = await _advertReadRepository.GetAllAsync();
+        var result = await _advertReadRepository.GetAllAsync(cancellationToken);
         if (result.Any())
         {
             foreach (var item in result)
             {
                 var avm = _mapper.Map<AdvertViewModel>(item);
+
                 if (item.Image is not null)
                 {
                     var image = _imageApplicationService.ConvertImageToFormFile(item.Image);
@@ -185,6 +186,7 @@ public class AdvertApplicationService : IAdvertApplicationService
             Image = image,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
+            ExpiredAt = new DateTime(2050, 1, 1),
             Status = AdvertStatus.Active
         };
 

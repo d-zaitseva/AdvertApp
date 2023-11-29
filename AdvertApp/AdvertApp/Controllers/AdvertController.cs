@@ -23,9 +23,9 @@ public class AdvertController : Controller
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet(Name = "GetAdvert")]
-    public ActionResult<IEnumerable<AdvertViewModel>> Get(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<AdvertViewModel>>> Get(CancellationToken cancellationToken)
     {
-        var collection = _advertApplicationService.GetAllAsync(cancellationToken);
+        var collection = await _advertApplicationService.GetAllAsync(cancellationToken);
 
         return Ok(collection);
     }
