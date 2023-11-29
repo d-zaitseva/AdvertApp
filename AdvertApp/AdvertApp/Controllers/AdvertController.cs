@@ -36,7 +36,7 @@ public class AdvertController : Controller
     /// <param name="model">Model to create new advert.</param>
     /// <returns></returns>
     [HttpPost(Name = "PostAdvert")]
-    public async Task<IActionResult> Post([FromForm]CreateAdvertFormModel model)
+    public async Task<IActionResult> Post([FromForm] CreateAdvertFormModel model)
     {
         var response = await _advertApplicationService.AddAsync(model);
 
@@ -60,7 +60,7 @@ public class AdvertController : Controller
 
         if (response.IsFailure)
         {
-            BadRequest(response.Error);
+            return BadRequest(response.Error);
         }
 
         return Ok();
@@ -72,13 +72,13 @@ public class AdvertController : Controller
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpDelete(Name = "DeleteAdvert")]
-    public async Task<ActionResult> Delete ([FromBody] DeleteAdvertFormModel model)
+    public async Task<ActionResult> Delete([FromBody] DeleteAdvertFormModel model)
     {
         var response = await _advertApplicationService.DeleteAsync(model);
 
         if (response.IsFailure)
         {
-            BadRequest(response.Error);
+            return BadRequest(response.Error);
         }
 
         return Ok();

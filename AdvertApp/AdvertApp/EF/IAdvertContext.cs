@@ -7,7 +7,6 @@ namespace AdvertApp.EF
     {
         public DbSet<Advert> Adverts { get; }
         public DbSet<User> Users { get; }
-        public DbSet<Image> Images { get; }
 
         int SaveChanges();
     }

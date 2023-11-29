@@ -28,6 +28,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IAdvertApplicationService, AdvertApplicationService>();
 builder.Services.AddScoped<IImageApplicationService, ImageApplicationService>();
+builder.Services.AddScoped<IUserApplicationService,  UserApplicationService>();
 
 builder.Services.AddScoped<IAdvertContext, AdvertContext>();
 

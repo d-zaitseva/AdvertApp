@@ -25,7 +25,7 @@ public class ImageApplicationService : IImageApplicationService
                 bytes = stream.ToArray();
             }
         }
-        
+
         image.Id = Guid.NewGuid();
         image.FileName = formFile.FileName;
         image.Name = formFile.Name;
@@ -39,14 +39,16 @@ public class ImageApplicationService : IImageApplicationService
     /// <inheritdoc />
     public IFormFile ConvertImageToFormFile(Image image)
     {
-        var stream = new MemoryStream(image.Data);
-
-        IFormFile file = new FormFile(stream, 0, image.Data.Length, image.Name, image.FileName)
+        IFormFile file;
+        using (var stream = new MemoryStream(image.Data))
         {
-            Headers = new HeaderDictionary(),
-            ContentDisposition = image.ContentDisposition,
-            ContentType = image.Type
-        };
+            file = new FormFile(stream, 0, image.Data.Length, image.Name, image.FileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentDisposition = image.ContentDisposition,
+                ContentType = image.Type
+            };
+        }
 
         return file;
     }

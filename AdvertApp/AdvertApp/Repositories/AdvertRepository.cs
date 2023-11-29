@@ -15,9 +15,7 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
 
     public async Task<IEnumerable<Advert>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _context.Adverts
-            .Include(a => a.Image)
-            .ToListAsync(cancellationToken);
+        return await _context.Adverts.ToListAsync(cancellationToken);
     }
 
     public async  Task<Advert?> GetByIdAsync(Guid id)
@@ -33,11 +31,6 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
     public async Task CreateAsync(Advert advert)
     {
         await _context.Adverts.AddAsync(advert);
-
-        if (advert.Image != null)
-        {
-            await _context.Images.AddAsync(advert.Image);
-        }
         
         _context.SaveChanges();
     }
@@ -45,11 +38,6 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
     public void Update(Advert advert)
     {
         _context.Adverts.Update(advert);
-        // TO DO: case when Image was deleted from advert
-        if (advert.Image != null)
-        {
-            _context.Images.Update(advert.Image);
-        }
 
         _context.SaveChanges();
     }
@@ -60,6 +48,7 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
         if (advert != null)
         {
             _context.Adverts.Remove(advert);
+            _context.SaveChanges();
         }
     }
 

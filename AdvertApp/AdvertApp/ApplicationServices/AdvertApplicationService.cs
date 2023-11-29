@@ -19,6 +19,7 @@ public class AdvertApplicationService : IAdvertApplicationService
     private readonly IConfiguration _configuration;
     private readonly SettingsPerUserOptions settingsOptions = new();
     private readonly IImageApplicationService _imageApplicationService;
+    private readonly IUserApplicationService _userApplicationService;
     private readonly IMapper _mapper;
 
     public AdvertApplicationService(
@@ -28,6 +29,7 @@ public class AdvertApplicationService : IAdvertApplicationService
         ILogger<IAdvertApplicationService> logger,
         IConfiguration configuration,
         IImageApplicationService imageApplicationService,
+        IUserApplicationService userApplicationService,
         IMapper mapper)
     {
         _advertReadRepository = advertReadRepository;
@@ -37,6 +39,7 @@ public class AdvertApplicationService : IAdvertApplicationService
         _configuration = configuration;
         _configuration.Bind(nameof(SettingsPerUserOptions), settingsOptions);
         _imageApplicationService = imageApplicationService;
+        _userApplicationService = userApplicationService;
         _mapper = mapper;
     }
 
@@ -74,21 +77,28 @@ public class AdvertApplicationService : IAdvertApplicationService
     public async Task<Result> AddAsync(CreateAdvertFormModel model)
     {
         var userAdverts = await _advertReadRepository.GetByUserIdAsync(model.UserId);
+        var user = await _userApplicationService.GetByIdAsync(model.UserId);
+        if (user == null) 
+        {
+            _logger.LogError($"User with Id {model.UserId} doesn't exist");
+            Result.Failure("User not found");
+        }
+
         if (userAdverts.Count() < settingsOptions.MaxAdvertAmount)
         {
             Image? image = model.Image != null
                 ? _imageApplicationService.ConvertFormFileToImage(model.Image)
                 : null;
 
-            var advert = CreateAdvert(model, image);
+            var createdAdvert = new Advert(model.UserId, user.Name, model.Text, image);
 
-            await _advertWriteRepository.CreateAsync(advert);
+            await _advertWriteRepository.CreateAsync(createdAdvert);
             _advertWriteRepository.CommitChanges();
 
             return Result.Success();
-
         }
-        _logger.LogError($" User with Id {model.UserId} exceeded the permissible limit of published adverts ammount." +
+
+        _logger.LogError($"User with Id {model.UserId} exceeded the permissible limit of published adverts ammount." +
             $"User cannot add new advert.");
 
         return Result.Failure("The advert cannot be created");
@@ -118,24 +128,19 @@ public class AdvertApplicationService : IAdvertApplicationService
             }
         }
 
-        updatedAdvert.Text = model.Text;
-
-        if (model.Image is not null)
+        try
         {
-            var image = _imageApplicationService.ConvertFormFileToImage(model.Image);
-            updatedAdvert.Image = image;
+            updatedAdvert.Updtate(
+                        model.Text,
+                        model.Image is not null
+                            ? _imageApplicationService.ConvertFormFileToImage(model.Image)
+                            : null,
+                        model.Status);
         }
-        else
+        catch (ArgumentNullException ex)
         {
-            updatedAdvert.Image = null;
-        }
-
-        updatedAdvert.UpdatedAt = DateTime.Now;
-        updatedAdvert.Status = model.Status;
-
-        if (model.Status == AdvertStatus.Closed)
-        {
-            updatedAdvert.ExpiredAt = DateTime.Now;
+            _logger.LogError(ex.Message);
+            return Result.Failure("Some required fields were not set");
         }
 
         _advertWriteRepository.Update(updatedAdvert);
@@ -167,28 +172,10 @@ public class AdvertApplicationService : IAdvertApplicationService
             }
         }
 
-        deletedAdvert.Status = AdvertStatus.Closed;
-        deletedAdvert.ExpiredAt = DateTime.Now;
+        deletedAdvert.SoftDelete();
 
         _advertWriteRepository.Update(deletedAdvert);
 
         return Result.Success();
-    }
-
-    private Advert CreateAdvert(CreateAdvertFormModel model, Image? image)
-    {
-        var createdAdvert = new Advert
-        {
-            Id = Guid.NewGuid(),
-            UserId = model.UserId,
-            Text = model.Text,
-            ImageId = image?.Id,
-            Image = image,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            Status = AdvertStatus.Active
-        };
-
-        return createdAdvert;
     }
 }

@@ -8,5 +8,7 @@ public interface IAdvertWriteRepository
 
     void Update(Advert advert);
 
+    Task DeleteAsync(Guid id);
+
     void CommitChanges();
 }

@@ -31,6 +31,4 @@ public class Image
     /// Image Data.
     /// </summary>
     public byte[] Data { get; set; } = new byte[0];
-
-    public Advert Advert { get; set; } = null!;
 }
