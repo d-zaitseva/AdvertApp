@@ -5,9 +5,6 @@ using AdvertApp.Models.Enums;
 using AdvertApp.Models.FormModels;
 using AdvertApp.Repositories.Contracts;
 using AutoMapper;
-using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +18,6 @@ namespace AdvertAppTests
         private readonly Mock<ILogger<IAdvertApplicationService>> _logger;
         private readonly Mock<IConfiguration> _configuration;
         private readonly Mock<IImageApplicationService> _imageApplicationService;
-        private readonly Mock<IUserApplicationService> _userApplicationService;
         private readonly Mock<IMapper> _mapper;
 
         private readonly IAdvertApplicationService _sut;
@@ -42,7 +38,6 @@ namespace AdvertAppTests
                 .Build();
 
             _imageApplicationService = new Mock<IImageApplicationService>();
-            _userApplicationService = new Mock<IUserApplicationService>();
             _mapper = new Mock<IMapper>();
 
 
@@ -53,7 +48,6 @@ namespace AdvertAppTests
                 _logger.Object,
                 configuration,
                 _imageApplicationService.Object,
-                _userApplicationService.Object,
                 _mapper.Object);
 
             updateformModel = new UpdateAdvertFormModel
@@ -87,7 +81,7 @@ namespace AdvertAppTests
                 .Setup(a =>
                 a.GetByUserIdAsync(It.IsAny<Guid>()))
                 .Returns(Task.FromResult<IEnumerable<Advert>>(new List<Advert> { }));
-            _userApplicationService
+            _userRepository
                 .Setup(u =>
                 u.GetByIdAsync(user.Id)).Returns(Task.FromResult<User?>(user));
 
@@ -115,7 +109,7 @@ namespace AdvertAppTests
                 a.GetByUserIdAsync(It.IsAny<Guid>()))
                 .Returns(Task.FromResult<IEnumerable<Advert>>(new List<Advert> { }));
 
-            _userApplicationService
+            _userRepository
                 .Setup(u =>
                 u.GetByIdAsync(It.IsAny<Guid>()))
                 .Returns(Task.FromResult<User?>(null));

@@ -19,7 +19,6 @@ public class AdvertApplicationService : IAdvertApplicationService
     private readonly IConfiguration _configuration;
     private readonly SettingsPerUserOptions settingsOptions = new();
     private readonly IImageApplicationService _imageApplicationService;
-    private readonly IUserApplicationService _userApplicationService;
     private readonly IMapper _mapper;
 
     public AdvertApplicationService(
@@ -29,7 +28,6 @@ public class AdvertApplicationService : IAdvertApplicationService
         ILogger<IAdvertApplicationService> logger,
         IConfiguration configuration,
         IImageApplicationService imageApplicationService,
-        IUserApplicationService userApplicationService,
         IMapper mapper)
     {
         _advertReadRepository = advertReadRepository;
@@ -39,7 +37,6 @@ public class AdvertApplicationService : IAdvertApplicationService
         _configuration = configuration;
         _configuration.Bind(nameof(SettingsPerUserOptions), settingsOptions);
         _imageApplicationService = imageApplicationService;
-        _userApplicationService = userApplicationService;
         _mapper = mapper;
     }
 
@@ -78,7 +75,7 @@ public class AdvertApplicationService : IAdvertApplicationService
     {
         var userAdverts = await _advertReadRepository.GetByUserIdAsync(model.UserId);
 
-        var user = await _userApplicationService.GetByIdAsync(model.UserId);
+        var user = await _userRepository.GetByIdAsync(model.UserId);
         if (user == null) 
         {
             _logger.LogError($"User with Id {model.UserId} doesn't exist");
