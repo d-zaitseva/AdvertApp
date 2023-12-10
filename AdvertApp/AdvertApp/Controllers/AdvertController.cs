@@ -1,7 +1,7 @@
-﻿using AdvertApp.ApplicationServices.Contracts;
-using AdvertApp.Models.FormModels;
-using AdvertApp.Models.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using AdvertApp.Contracts.Models.FormModels;
+using AdvertApp.Contracts.Models.ViewModels;
+using AdvertApp.Application.ApplicationServices.Contracts;
 
 namespace AdvertApp.Controllers;
 

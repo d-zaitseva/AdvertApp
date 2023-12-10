@@ -1,9 +1,9 @@
-using AdvertApp.ApplicationServices;
-using AdvertApp.ApplicationServices.Contracts;
-using AdvertApp.EF.Entities;
-using AdvertApp.Models.Enums;
-using AdvertApp.Models.FormModels;
-using AdvertApp.Repositories.Contracts;
+using AdvertApp.Application.ApplicationServices;
+using AdvertApp.Application.ApplicationServices.Contracts;
+using AdvertApp.Contracts.Enums;
+using AdvertApp.Contracts.Models.FormModels;
+using AdvertApp.Domain.Entities;
+using AdvertApp.ReadWrite;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

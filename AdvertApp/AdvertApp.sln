@@ -4,8 +4,36 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertApp", "AdvertApp\AdvertApp.csproj", "{60DB15A3-6878-43F4-8195-15FA1C268757}"
+	ProjectSection(ProjectDependencies) = postProject
+		{70027E6A-B6B0-4846-B4FE-C943D8E64EDD} = {70027E6A-B6B0-4846-B4FE-C943D8E64EDD}
+		{8C817AC1-B116-4FB6-B005-26860B68B238} = {8C817AC1-B116-4FB6-B005-26860B68B238}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvertAppTests", "AdvertAppTests\AdvertAppTests.csproj", "{D84D195C-C15A-4802-A8D3-16B23B0E27D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertAppTests", "AdvertAppTests\AdvertAppTests.csproj", "{D84D195C-C15A-4802-A8D3-16B23B0E27D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{70027E6A-B6B0-4846-B4FE-C943D8E64EDD} = {70027E6A-B6B0-4846-B4FE-C943D8E64EDD}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertApp.Persistance", "AdvertApp.Persistance\AdvertApp.Persistance.csproj", "{8C817AC1-B116-4FB6-B005-26860B68B238}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D6A3FB3-DA78-472C-8CAF-8D31D62585CA} = {5D6A3FB3-DA78-472C-8CAF-8D31D62585CA}
+		{D0447802-E648-4B67-99A0-9A4D14BC4F12} = {D0447802-E648-4B67-99A0-9A4D14BC4F12}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertApp.Application", "AdvertApp.Application\AdvertApp.Application.csproj", "{70027E6A-B6B0-4846-B4FE-C943D8E64EDD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertApp.Domain", "AdvertApp.Domain\AdvertApp.Domain.csproj", "{836A327D-439E-41DE-BB54-EABC13425350}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D0447802-E648-4B67-99A0-9A4D14BC4F12} = {D0447802-E648-4B67-99A0-9A4D14BC4F12}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Advert.Contracts", "Advert.Contracts\Advert.Contracts.csproj", "{D0447802-E648-4B67-99A0-9A4D14BC4F12}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertApp.ReadWrite", "AdvertApp.ReadWrite\AdvertApp.ReadWrite.csproj", "{5D6A3FB3-DA78-472C-8CAF-8D31D62585CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{836A327D-439E-41DE-BB54-EABC13425350} = {836A327D-439E-41DE-BB54-EABC13425350}
+		{D0447802-E648-4B67-99A0-9A4D14BC4F12} = {D0447802-E648-4B67-99A0-9A4D14BC4F12}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +49,26 @@ Global
 		{D84D195C-C15A-4802-A8D3-16B23B0E27D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D84D195C-C15A-4802-A8D3-16B23B0E27D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D84D195C-C15A-4802-A8D3-16B23B0E27D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C817AC1-B116-4FB6-B005-26860B68B238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C817AC1-B116-4FB6-B005-26860B68B238}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C817AC1-B116-4FB6-B005-26860B68B238}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C817AC1-B116-4FB6-B005-26860B68B238}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70027E6A-B6B0-4846-B4FE-C943D8E64EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70027E6A-B6B0-4846-B4FE-C943D8E64EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70027E6A-B6B0-4846-B4FE-C943D8E64EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70027E6A-B6B0-4846-B4FE-C943D8E64EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{836A327D-439E-41DE-BB54-EABC13425350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{836A327D-439E-41DE-BB54-EABC13425350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{836A327D-439E-41DE-BB54-EABC13425350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{836A327D-439E-41DE-BB54-EABC13425350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0447802-E648-4B67-99A0-9A4D14BC4F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0447802-E648-4B67-99A0-9A4D14BC4F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0447802-E648-4B67-99A0-9A4D14BC4F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0447802-E648-4B67-99A0-9A4D14BC4F12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D6A3FB3-DA78-472C-8CAF-8D31D62585CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D6A3FB3-DA78-472C-8CAF-8D31D62585CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D6A3FB3-DA78-472C-8CAF-8D31D62585CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D6A3FB3-DA78-472C-8CAF-8D31D62585CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

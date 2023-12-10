@@ -1,9 +1,6 @@
-using AdvertApp.ApplicationServices.Contracts;
-using AdvertApp.ApplicationServices;
-using AdvertApp.EF;
-using AdvertApp.Repositories.Contracts;
-using AdvertApp.Repositories;
+using AdvertApp.Applicationæ;
 using AdvertApp.AutoMapping;
+using AdvertApp.Persistance;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -26,14 +23,8 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
-builder.Services.AddScoped<IAdvertApplicationService, AdvertApplicationService>();
-builder.Services.AddScoped<IImageApplicationService, ImageApplicationService>();
-
-builder.Services.AddScoped<IAdvertContext, AdvertContext>();
-
-builder.Services.AddScoped<IAdvertReadRepository, AdvertRepository>();
-builder.Services.AddScoped<IAdvertWriteRepository, AdvertRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddPersistance();
+builder.Services.AddApplication();
 
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
