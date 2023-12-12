@@ -1,10 +1,13 @@
 using AdvertApp.Applicationæ;
 using AdvertApp.AutoMapping;
+using AdvertApp.Middleware;
 using AdvertApp.Persistance;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddConsole();
 
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -29,6 +32,8 @@ builder.Services.AddApplication();
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

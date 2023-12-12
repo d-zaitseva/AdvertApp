@@ -9,11 +9,10 @@ namespace AdvertApp.Controllers;
 [Route("[controller]")]
 public class AdvertController : Controller
 {
-    private readonly ILogger<AdvertController> _logger; private readonly IAdvertApplicationService _advertApplicationService;
+    private readonly IAdvertApplicationService _advertApplicationService;
 
-    public AdvertController(ILogger<AdvertController> logger, IAdvertApplicationService advertApplicationService)
+    public AdvertController(IAdvertApplicationService advertApplicationService)
     {
-        _logger = logger;
         _advertApplicationService = advertApplicationService;
     }
 

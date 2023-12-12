@@ -128,20 +128,17 @@ public class AdvertApplicationService : IAdvertApplicationService
             }
         }
 
-        try
+        if (string.IsNullOrEmpty(model.Text))
         {
-            updatedAdvert.Updtate(
+            return Result.Failure("Text is a required field.");
+        }
+
+        updatedAdvert.Updtate(
                         model.Text,
                         model.Image is not null
                             ? _imageApplicationService.ConvertFormFileToImage(model.Image)
                             : null,
                         model.Status);
-        }
-        catch (ArgumentNullException ex)
-        {
-            _logger.LogError(ex.Message);
-            return Result.Failure("Some required fields were not set");
-        }
 
         _advertWriteRepository.Update(updatedAdvert);
 
