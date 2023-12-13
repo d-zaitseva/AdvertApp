@@ -176,6 +176,40 @@ public class AdvertApplicationService : IAdvertApplicationService
             }
         }
 
+        if (deletedAdvert.FilePath != null)
+        {
+            _imageApplicationService.DeleteImageFile(deletedAdvert.FilePath);
+        }
+
+        await _advertWriteRepository.DeleteAsync(deletedAdvert.Id);
+
+        return Result.Success();
+    }
+
+    /// <inheritdoc />
+    public async Task<Result> SoftDeleteAsync(DeleteAdvertFormModel model)
+    {
+        var deletedAdvert = await _advertReadRepository.GetByIdAsync(model.AdvertId);
+        if (deletedAdvert is null)
+        {
+            return Result.Failure($"Advert with Id {model.AdvertId} was not found");
+        }
+
+        if (model.UserId != deletedAdvert.UserId)
+        {
+            var user = await _userRepository.GetByIdAsync(model.UserId);
+
+            if (user is null)
+            {
+                return Result.Failure($"User with Id {model.UserId} was not found");
+            }
+
+            if (user.Role != UserRole.Admin)
+            {
+                return Result.Failure($"User with Id {model.UserId} cannot delete advert with Id {model.AdvertId}");
+            }
+        }
+
         deletedAdvert.SoftDelete();
 
         _advertWriteRepository.Update(deletedAdvert);

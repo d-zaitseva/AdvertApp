@@ -29,8 +29,14 @@ public interface IAdvertApplicationService
     /// <summary>
     /// Deletes advert by Id.
     /// </summary>
-    /// <param name="id">Advert Id.</param>
-    /// /// <param name="userId">User Id who deletes advert.</param>
+    /// <param name="model">Advert Id and User Id who deletes advert.</param>
     /// <returns></returns>
     Task<Result> DeleteAsync(DeleteAdvertFormModel model);
+
+    /// <summary>
+    /// Change advert status to deleted by Id.
+    /// </summary>
+    /// <param name="model">Advert Id and User Id who deletes advert.</param>
+    /// <returns></returns>
+    Task<Result> SoftDeleteAsync(DeleteAdvertFormModel model);
 }

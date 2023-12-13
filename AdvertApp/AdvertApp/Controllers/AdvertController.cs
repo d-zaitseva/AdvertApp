@@ -70,6 +70,25 @@ public class AdvertController : Controller
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
+    [Route("/softdeleteadvert")]
+    [HttpDelete]
+    public async Task<ActionResult> SoftDelete([FromBody] DeleteAdvertFormModel model)
+    {
+        var response = await _advertApplicationService.SoftDeleteAsync(model);
+
+        if (response.IsFailure)
+        {
+            return BadRequest(response.Error);
+        }
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Delete Advert - delete completely from DB.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
     [HttpDelete(Name = "DeleteAdvert")]
     public async Task<ActionResult> Delete([FromBody] DeleteAdvertFormModel model)
     {
