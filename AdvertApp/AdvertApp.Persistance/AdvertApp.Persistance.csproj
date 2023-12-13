@@ -22,4 +22,8 @@
     <ProjectReference Include="..\AdvertApp.ReadWrite\AdvertApp.ReadWrite.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

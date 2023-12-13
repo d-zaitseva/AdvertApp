@@ -6,16 +6,22 @@ namespace AdvertApp.Application.ApplicationServices.Contracts;
 public interface IImageApplicationService
 {
     /// <summary>
-    /// Allows to convert IFormFile to Image entity.
+    /// Uploads file to disc.
     /// </summary>
-    /// <param name="formFile">IFormFile object</param>
-    /// <returns></returns>
-    Image ConvertFormFileToImage (IFormFile formFile);
+    /// <param name="file">File to upload.</param>
+    /// <returns>Path of saved file</returns>
+    Task<string> UploadAsync(IFormFile file);
 
     /// <summary>
-    /// Allows to convert Image entity to IFormFile.
+    /// Returns file by path.
     /// </summary>
-    /// <param name="image">Image</param>
+    /// <param name="path">Path of the file.</param>
     /// <returns></returns>
-    IFormFile ConvertImageToFormFile(Image image);
+    IFormFile GetImageFile(string path);
+
+    /// <summary>
+    /// Deletes file if exists at provided path.
+    /// </summary>
+    /// <param name="path">Path of the file.</param>
+    void DeleteImageFile(string path);
 }

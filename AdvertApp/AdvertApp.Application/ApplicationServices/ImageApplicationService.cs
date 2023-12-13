@@ -1,53 +1,65 @@
 ﻿using Microsoft.AspNetCore.Http;
-using AdvertApp.Domain.Entities;
 using AdvertApp.Application.ApplicationServices.Contracts;
+using Microsoft.Extensions.Configuration;
 
 namespace AdvertApp.Application.ApplicationServices;
 
 public class ImageApplicationService : IImageApplicationService
 {
-    /// <inheritdoc />
-    public Image ConvertFormFileToImage(IFormFile formFile)
+    private readonly IConfiguration _configuration;
+
+    public ImageApplicationService(IConfiguration configuration)
     {
-        Image image = new Image();
-        // TO DO --- Add try - catch
-        long fileSize = formFile.Length;
-        string fileType = formFile.ContentType;
-        byte[] bytes = new byte[fileSize];
-
-        if (fileSize > 0)
-        {
-            using (var stream = new MemoryStream())
-            {
-                formFile.CopyTo(stream);
-                bytes = stream.ToArray();
-            }
-        }
-
-        image.Id = Guid.NewGuid();
-        image.FileName = formFile.FileName;
-        image.Name = formFile.Name;
-        image.Type = fileType;
-        image.ContentDisposition = formFile.ContentDisposition.ToString();
-        image.Data = bytes;
-
-        return image;
+        _configuration = configuration;
     }
 
     /// <inheritdoc />
-    public IFormFile ConvertImageToFormFile(Image image)
+    public async Task<string> UploadAsync(IFormFile file)
     {
-        IFormFile file;
-        using (var stream = new MemoryStream(image.Data))
+        if (file.Length > 0)
         {
-            file = new FormFile(stream, 0, image.Data.Length, image.Name, image.FileName)
+            var fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(_configuration["StoredFilesPath"], fileName);          
+
+            using (var stream = File.Create(filePath))
             {
-                Headers = new HeaderDictionary(),
-                ContentDisposition = image.ContentDisposition,
-                ContentType = image.Type
-            };
+                await file.CopyToAsync(stream);
+            }
+            return filePath;
         }
 
-        return file;
+        return String.Empty;
+    }
+
+    /// <inheritdoc />
+    public IFormFile GetImageFile (string path)
+    {
+        IFormFile file;
+        if (!string.IsNullOrEmpty(path))
+        {
+            using (var stream = File.OpenRead(path))
+            {
+                file = new FormFile(stream, 0, stream.Length, "Image", Path.GetFileName(stream.Name))
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = "image/jpeg"
+                };
+            }
+
+            return file;
+        }
+
+        return null;
+    }
+
+    public void DeleteImageFile(string path)
+    {
+        if (!string.IsNullOrEmpty(path))
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
     }
 }

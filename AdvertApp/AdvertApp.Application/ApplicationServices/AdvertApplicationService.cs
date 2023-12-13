@@ -54,9 +54,9 @@ public class AdvertApplicationService : IAdvertApplicationService
             {
                 var avm = _mapper.Map<AdvertViewModel>(item);
 
-                if (item.Image is not null)
+                if (!string.IsNullOrEmpty(item.FilePath))
                 {
-                    var image = _imageApplicationService.ConvertImageToFormFile(item.Image);
+                    var image = _imageApplicationService.GetImageFile(item.FilePath);
                     avm.Image = image;
                 }
 
@@ -86,11 +86,11 @@ public class AdvertApplicationService : IAdvertApplicationService
 
         if (userAdverts.Count() < settingsOptions.MaxAdvertAmount)
         {
-            Image? image = model.Image != null
-                ? _imageApplicationService.ConvertFormFileToImage(model.Image)
-                : null;
+            var path = model.Image is not null 
+                ? await _imageApplicationService.UploadAsync(model.Image) 
+                : string.Empty;
 
-            var createdAdvert = new Advert(model.UserId, user.Name, model.Text, image);
+            var createdAdvert = new Advert(model.UserId, user.Name, model.Text, path);
 
             await _advertWriteRepository.CreateAsync(createdAdvert);
             _advertWriteRepository.CommitChanges();
@@ -133,11 +133,18 @@ public class AdvertApplicationService : IAdvertApplicationService
             return Result.Failure("Text is a required field.");
         }
 
+        if (updatedAdvert.FilePath != null)
+        {
+            _imageApplicationService.DeleteImageFile(updatedAdvert.FilePath);
+        }
+
+        var path = model.Image is not null
+                ? await _imageApplicationService.UploadAsync(model.Image)
+                : string.Empty;
+
         updatedAdvert.Updtate(
                         model.Text,
-                        model.Image is not null
-                            ? _imageApplicationService.ConvertFormFileToImage(model.Image)
-                            : null,
+                        path,
                         model.Status);
 
         _advertWriteRepository.Update(updatedAdvert);

@@ -30,14 +30,11 @@ public class AdvertContext : DbContext, IAdvertContext
             entity.Property(a => a.ExpiredAt).HasColumnType("datetime").HasDefaultValue(null);
             entity.Property(a => a.UserId);
             entity.Property(a => a.AuthorName).HasMaxLength(255);
+            entity.Property(a => a.FilePath).HasMaxLength(255);
 
             entity.OwnsOne(e => e.Audit, e => e.ConfigureAudit())
             .Navigation(e => e.Audit)
             .IsRequired();
-
-            entity.OwnsOne(e => e.Image, e => e.ConfigureImage())
-            .Navigation(e => e.Audit)
-            .IsRequired(false);
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -75,28 +72,6 @@ public static class ConfigurationExtensions
             .Property(e => e.UpdatedAt)
             .IsRequired(true)
             .HasColumnType("datetime");
-
-        return builder;
-    }
-
-    public static OwnedNavigationBuilder<TOwner, Image> ConfigureImage<TOwner>(
-    this OwnedNavigationBuilder<TOwner, Image> builder)
-    where TOwner : class
-    {
-        builder
-            .Property(e => e.Id);
-        builder
-            .Property(e => e.Name);
-        builder
-            .Property(e => e.FileName);
-        builder
-            .Property(e => e.Type);
-        builder
-            .Property(e => e.ContentDisposition);
-        builder
-            .Property(e => e.Data)
-            .HasColumnType("varbinary(max)");
-
 
         return builder;
     }

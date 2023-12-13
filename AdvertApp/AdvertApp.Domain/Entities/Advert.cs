@@ -4,12 +4,12 @@ namespace AdvertApp.Domain.Entities;
 
 public class Advert
 {
-    public Advert(Guid userId, string userName, string text, Image? image)
+    public Advert(Guid userId, string userName, string text, string filePath)
     {
         UserId = userId;
         AuthorName = userName;
         Text = text;
-        Image = image;
+        FilePath = filePath;
         Audit = new Audit(DateTime.Now);
         Status = AdvertStatus.Active;
     }
@@ -19,17 +19,17 @@ public class Advert
     public Guid UserId { get; }
     public string AuthorName { get; }
     public string Text { get; private set; } = string.Empty;
-    public Image? Image { get; private set; } = null;
+    public string FilePath { get; private set; } = string.Empty;
     public int Rating { get; } = 0;
     public Audit Audit { get; private set; }
     public DateTime? ExpiredAt { get; private set; } = null;
     public AdvertStatus Status { get; private set; }
 
-    public void Updtate(string text, Image? image, AdvertStatus status)
+    public void Updtate(string text, string filePath, AdvertStatus status)
     {
         ArgumentNullException.ThrowIfNull(text);
         Text = text;
-        Image = image;
+        FilePath = filePath;
         Audit.SetUpdateDate(DateTime.Now);
         Status = status;
         if (Status == AdvertStatus.Closed)
