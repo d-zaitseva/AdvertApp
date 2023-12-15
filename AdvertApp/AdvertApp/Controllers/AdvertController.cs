@@ -2,6 +2,7 @@
 using AdvertApp.Contracts.Models.FormModels;
 using AdvertApp.Contracts.Models.ViewModels;
 using AdvertApp.Application.ApplicationServices.Contracts;
+using AdvertApp.Contracts.Models;
 
 namespace AdvertApp.Controllers;
 
@@ -19,12 +20,15 @@ public class AdvertController : Controller
     /// <summary>
     /// Get Collection of all Adverts.
     /// </summary>
+    /// <param name="filterRequest">Display options as page number and size, sorting parameters.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet(Name = "GetAdvert")]
-    public async Task<ActionResult<IEnumerable<AdvertViewModel>>> Get(CancellationToken cancellationToken)
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<AdvertViewModel>>> Get(
+        [FromQuery] FilterRequest filterRequest, 
+        CancellationToken cancellationToken)
     {
-        var collection = await _advertApplicationService.GetAllAsync(cancellationToken);
+        var collection = await _advertApplicationService.GetAllAsync(filterRequest, cancellationToken);
 
         return Ok(collection);
     }

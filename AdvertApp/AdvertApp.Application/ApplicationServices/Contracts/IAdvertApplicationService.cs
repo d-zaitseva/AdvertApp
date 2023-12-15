@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using AdvertApp.Contracts.Models.FormModels;
 using AdvertApp.Contracts.Models.ViewModels;
+using AdvertApp.Contracts.Enums;
+using AdvertApp.Contracts.Models;
 
 namespace AdvertApp.Application.ApplicationServices.Contracts;
 
@@ -10,7 +12,7 @@ public interface IAdvertApplicationService
     /// Returns all adverts.
     /// </summary>
     /// <returns></returns>
-    Task<IEnumerable<AdvertViewModel>> GetAllAsync(CancellationToken cancellationToke);
+    Task<IEnumerable<AdvertViewModel>> GetAllAsync(FilterRequest filterRequest, CancellationToken cancellationToke);
 
     /// <summary>
     /// Adds advert.

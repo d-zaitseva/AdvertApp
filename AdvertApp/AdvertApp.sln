@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertApp.Domain", "AdvertA
 		{D0447802-E648-4B67-99A0-9A4D14BC4F12} = {D0447802-E648-4B67-99A0-9A4D14BC4F12}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Advert.Contracts", "Advert.Contracts\Advert.Contracts.csproj", "{D0447802-E648-4B67-99A0-9A4D14BC4F12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertApp.Contracts", "Advert.Contracts\AdvertApp.Contracts.csproj", "{D0447802-E648-4B67-99A0-9A4D14BC4F12}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvertApp.ReadWrite", "AdvertApp.ReadWrite\AdvertApp.ReadWrite.csproj", "{5D6A3FB3-DA78-472C-8CAF-8D31D62585CA}"
 	ProjectSection(ProjectDependencies) = postProject

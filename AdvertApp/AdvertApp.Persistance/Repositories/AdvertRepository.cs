@@ -1,7 +1,9 @@
 ﻿using AdvertApp.Application;
+using AdvertApp.Contracts.Models;
 using AdvertApp.Domain.Entities;
 using AdvertApp.ReadWrite;
 using Microsoft.EntityFrameworkCore;
+
 namespace AdvertApp.Persistance.Repositories;
 
 public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
@@ -16,6 +18,13 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
     public async Task<IEnumerable<Advert>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Adverts.ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<Advert>> GetAllFilteredAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
+    {
+        var list = await _context.Adverts.ToListAsync(cancellationToken);
+
+        return list;
     }
 
     public async  Task<Advert?> GetByIdAsync(Guid id)

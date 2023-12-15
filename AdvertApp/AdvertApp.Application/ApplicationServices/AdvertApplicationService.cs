@@ -43,11 +43,11 @@ public class AdvertApplicationService : IAdvertApplicationService
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<AdvertViewModel>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<AdvertViewModel>> GetAllAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
     {
         var collection = new List<AdvertViewModel>();
 
-        var result = await _advertReadRepository.GetAllAsync(cancellationToken);
+        var result = await _advertReadRepository.GetAllFilteredAsync(filterRequest, cancellationToken);
         if (result.Any())
         {
             foreach (var item in result)
@@ -63,7 +63,6 @@ public class AdvertApplicationService : IAdvertApplicationService
                 collection.Add(avm);
             }
         }
-
         else
         {
             _logger.LogInformation("AdvertReadRepository's method GetAllAsync() returned no adverts");
@@ -78,7 +77,7 @@ public class AdvertApplicationService : IAdvertApplicationService
         var userAdverts = await _advertReadRepository.GetByUserIdAsync(model.UserId);
 
         var user = await _userRepository.GetByIdAsync(model.UserId);
-        if (user == null) 
+        if (user == null)
         {
             _logger.LogError($"User with Id {model.UserId} doesn't exist");
             return Result.Failure("User not found");
@@ -86,8 +85,8 @@ public class AdvertApplicationService : IAdvertApplicationService
 
         if (userAdverts.Count() < settingsOptions.MaxAdvertAmount)
         {
-            var path = model.Image is not null 
-                ? await _imageApplicationService.UploadAsync(model.Image) 
+            var path = model.Image is not null
+                ? await _imageApplicationService.UploadAsync(model.Image)
                 : string.Empty;
 
             var createdAdvert = new Advert(model.UserId, user.Name, model.Text, path);
