@@ -8,5 +8,7 @@ public interface IAdvertContext
     public DbSet<Advert> Adverts { get; }
     public DbSet<User> Users { get; }
 
+    DbSet<AdvertModel> SortedAdverts { get; }
+
     int SaveChanges();
 }

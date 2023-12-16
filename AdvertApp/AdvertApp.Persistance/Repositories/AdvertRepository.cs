@@ -2,6 +2,7 @@
 using AdvertApp.Contracts.Models;
 using AdvertApp.Domain.Entities;
 using AdvertApp.ReadWrite;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdvertApp.Persistance.Repositories;
@@ -20,11 +21,18 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
         return await _context.Adverts.ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Advert>> GetAllFilteredAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
+    public async Task<IEnumerable<AdvertModel>> GetAllSortededAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
     {
-        var list = await _context.Adverts.ToListAsync(cancellationToken);
+        var pageSize = new SqlParameter("@PageSize", filterRequest.PageSize);
+        var page = new SqlParameter("@PageNumber", filterRequest.Page);
+        var sortBy = new SqlParameter("@SortBy", filterRequest.SortBy);
+        var sortAsc = new SqlParameter("@SortAsc", filterRequest.SortAsc);
 
-        return list;
+        var result = await _context.SortedAdverts
+                        .FromSqlRaw("GetAdverts {0}, {1}, {2}, {3}", pageSize, page, sortBy, sortAsc)
+                        .ToListAsync(cancellationToken);
+
+        return result;
     }
 
     public async  Task<Advert?> GetByIdAsync(Guid id)

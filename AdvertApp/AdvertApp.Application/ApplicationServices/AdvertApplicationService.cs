@@ -47,7 +47,8 @@ public class AdvertApplicationService : IAdvertApplicationService
     {
         var collection = new List<AdvertViewModel>();
 
-        var result = await _advertReadRepository.GetAllFilteredAsync(filterRequest, cancellationToken);
+        var result = await _advertReadRepository.GetAllSortededAsync(filterRequest, cancellationToken);
+
         if (result.Any())
         {
             foreach (var item in result)
