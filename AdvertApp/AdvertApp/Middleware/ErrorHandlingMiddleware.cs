@@ -5,7 +5,6 @@ namespace AdvertApp.Middleware;
 public class ErrorHandlingMiddleware
 {
     private readonly RequestDelegate _next;
-    //private readonly ILogger<ErrorHandlingMiddleware> _logger;
 
     public ErrorHandlingMiddleware(RequestDelegate next)
     {
