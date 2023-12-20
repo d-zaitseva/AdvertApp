@@ -18,12 +18,12 @@ public class CreateAdvertFormModel
     /// </summary>
     [Required(ErrorMessage = "Advert text cannot be empty.")]
     [MaxLength(500)]
-    public string Text { get; set; } = String.Empty;
+    public string Text { get; set; } = string.Empty;
 
     /// <summary>
     /// Advert image file.
     /// </summary>
     [MaxFileSize(5 * 1024 * 1024)]
-    [AllowedExtensions(new string[] { ".jpg", ".png" })]
+    [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
     public IFormFile? Image { get; set; }
 }
