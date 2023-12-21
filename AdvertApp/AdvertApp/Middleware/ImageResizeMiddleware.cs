@@ -113,28 +113,23 @@ public class ImageResizeMiddleware
     private ContentParams GetContentData(string imagePath, ResizeParams resizeParams)
     {
         byte[] arr;
-        string path;
 
-        using (var stream = File.OpenRead(imagePath))
+        using (Image image = Image.Load(imagePath))
         {
-            using (Image image = Image.Load(stream))
-            {
-                image.Mutate(x => x.Resize(resizeParams.w, resizeParams.h));
-                path = Path.Combine(_configuration["ResizedFilesPath"], Path.GetFileName(stream.Name));
-                image.Save(path);
+            image.Mutate(x => x.Resize(resizeParams.w, resizeParams.h));
 
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    var encoder = image.DetectEncoder(path);
-                    image.Save(memoryStream, encoder);
-                    arr = memoryStream.ToArray();
-                }
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                var encoder = image.DetectEncoder(imagePath);
+                image.Save(memoryStream, encoder);
+                arr = memoryStream.ToArray();
             }
         }
+
         return new ContentParams()
         {
             size = arr.Length,
-            format = Path.GetExtension(path),
+            format = Path.GetExtension(imagePath),
             data = arr
         };
     }
