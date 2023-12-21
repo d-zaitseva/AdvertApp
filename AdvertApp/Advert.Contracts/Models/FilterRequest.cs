@@ -36,4 +36,35 @@ public class FilterRequest
     /// Sort direction
     /// </summary>
     public bool SortAsc { get; set; } = false;
+
+    /// <summary>
+    /// Searched advert status
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
+    public AdvertStatus? Status { get; set; } = null;
+
+    /// <summary>
+    /// Date advert was created
+    /// </summary>
+    public DateTime? CreatedAt { get; set; } = null;
+
+    /// <summary>
+    /// Date advert was updated
+    /// </summary>
+    public DateTime? UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Min rating of adverts
+    /// </summary>
+    public int? MinRating { get; set; }
+
+    /// <summary>
+    /// Max rating of adverts
+    /// </summary>
+    public int? MaxRating { get; set; }
+
+    /// <summary>
+    /// Searched text at author name and advert text
+    /// </summary>
+    public string FullTextSearch { get; set; } = string.Empty;
 }

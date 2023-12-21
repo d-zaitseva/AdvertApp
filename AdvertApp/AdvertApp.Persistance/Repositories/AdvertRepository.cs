@@ -1,9 +1,11 @@
 ﻿using AdvertApp.Application;
+using AdvertApp.Contracts.Enums;
 using AdvertApp.Contracts.Models;
 using AdvertApp.Domain.Entities;
 using AdvertApp.ReadWrite;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace AdvertApp.Persistance.Repositories;
 
@@ -23,13 +25,12 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
 
     public async Task<IEnumerable<AdvertModel>> GetAllSortededAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
     {
-        var pageSize = new SqlParameter("@PageSize", filterRequest.PageSize);
-        var page = new SqlParameter("@PageNumber", filterRequest.Page);
-        var sortBy = new SqlParameter("@SortBy", filterRequest.SortBy);
-        var sortAsc = new SqlParameter("@SortAsc", filterRequest.SortAsc);
+        var request = FormattableStringFactory.Create("GetAdverts {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}",
+            filterRequest.PageSize, filterRequest.Page, filterRequest.SortBy, filterRequest.SortAsc, filterRequest.FullTextSearch,
+            filterRequest.Status, filterRequest.CreatedAt, filterRequest.UpdatedAt, filterRequest.MinRating, filterRequest.MaxRating);
 
         var result = await _context.SortedAdverts
-                        .FromSqlRaw("GetAdverts {0}, {1}, {2}, {3}", pageSize, page, sortBy, sortAsc)
+                        .FromSqlInterpolated(request)
                         .ToListAsync(cancellationToken);
 
         return result;
