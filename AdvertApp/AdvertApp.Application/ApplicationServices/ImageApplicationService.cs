@@ -18,8 +18,13 @@ public class ImageApplicationService : IImageApplicationService
     {
         if (file.Length > 0)
         {
+            if (!Directory.Exists(_configuration["StoredFilesPath"]))
+            {
+                Directory.CreateDirectory(_configuration["StoredFilesPath"]);
+            }
+
             var fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + Path.GetExtension(file.FileName);
-            var filePath = Path.Combine(_configuration["StoredFilesPath"], fileName);          
+            var filePath = Path.Combine(_configuration["StoredFilesPath"], fileName);
 
             using (var stream = File.Create(filePath))
             {
@@ -28,11 +33,11 @@ public class ImageApplicationService : IImageApplicationService
             return filePath;
         }
 
-        return String.Empty;
+        return string.Empty;
     }
 
     /// <inheritdoc />
-    public IFormFile GetImageFile (string path)
+    public IFormFile GetImageFile(string path)
     {
         IFormFile file;
         if (!string.IsNullOrEmpty(path))
