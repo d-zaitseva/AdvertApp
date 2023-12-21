@@ -33,6 +33,11 @@ public class AdvertViewModel
     public IFormFile? Image { get; set; }
 
     /// <summary>
+    /// Image name, can be used for resize.
+    /// </summary>
+    public string ImageName { get; set; } = string.Empty;
+
+    /// <summary>
     /// Advert rating.
     /// </summary>
     public int Rating { get; set; }

@@ -34,6 +34,7 @@ builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 var app = builder.Build();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<ImageResizeMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
