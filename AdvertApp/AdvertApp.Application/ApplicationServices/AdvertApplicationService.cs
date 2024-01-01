@@ -128,11 +128,6 @@ public class AdvertApplicationService : IAdvertApplicationService
             }
         }
 
-        if (string.IsNullOrEmpty(model.Text))
-        {
-            return Result.Failure("Text is a required field.");
-        }
-
         if (updatedAdvert.FilePath != null)
         {
             _imageApplicationService.DeleteImageFile(updatedAdvert.FilePath);
