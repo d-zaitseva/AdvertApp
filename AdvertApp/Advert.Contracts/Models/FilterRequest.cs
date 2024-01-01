@@ -51,17 +51,17 @@ public class FilterRequest
     /// <summary>
     /// Date advert was updated
     /// </summary>
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; } = null;
 
     /// <summary>
     /// Min rating of adverts
     /// </summary>
-    public int? MinRating { get; set; }
+    public int? MinRating { get; set; } = null;
 
     /// <summary>
     /// Max rating of adverts
     /// </summary>
-    public int? MaxRating { get; set; }
+    public int? MaxRating { get; set; } = null;
 
     /// <summary>
     /// Searched text at author name and advert text

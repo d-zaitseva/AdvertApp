@@ -1,11 +1,9 @@
-﻿using AdvertApp.Application;
-using AdvertApp.Contracts.Enums;
+﻿using AdvertApp.Contracts.Enums;
 using AdvertApp.Contracts.Models;
 using AdvertApp.Domain.Entities;
 using AdvertApp.ReadWrite;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
+using System.Linq.Expressions;
 
 namespace AdvertApp.Persistance.Repositories;
 
@@ -23,15 +21,72 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
         return await _context.Adverts.ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<AdvertModel>> GetAllSortededAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Advert>> GetAllSortededAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
     {
-        var request = FormattableStringFactory.Create("GetAdverts {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}",
-            filterRequest.PageSize, filterRequest.Page, filterRequest.SortBy, filterRequest.SortAsc, filterRequest.FullTextSearch,
-            filterRequest.Status, filterRequest.CreatedAt, filterRequest.UpdatedAt, filterRequest.MinRating, filterRequest.MaxRating);
+        IQueryable<Advert> advertQuery = _context.Adverts.AsQueryable();
 
-        var result = await _context.SortedAdverts
-                        .FromSqlInterpolated(request)
-                        .ToListAsync(cancellationToken);
+        if (!string.IsNullOrWhiteSpace(filterRequest.FullTextSearch))
+        {
+            advertQuery = advertQuery.Where(a => 
+                a.AuthorName.Contains(filterRequest.FullTextSearch) || 
+                a.Text.Contains(filterRequest.FullTextSearch));
+        }
+
+        if (filterRequest.Status is not null)
+        {
+            advertQuery = advertQuery.Where(a =>
+                a.Status == filterRequest.Status);
+        }
+
+        if (filterRequest.CreatedAt is not null)
+        {
+            advertQuery = advertQuery.Where(a =>
+                a.Audit.CreatedAt.Date == filterRequest.CreatedAt);
+        }
+
+        if (filterRequest.UpdatedAt is not null)
+        {
+            advertQuery = advertQuery.Where(a =>
+                a.Audit.UpdatedAt.Date == filterRequest.UpdatedAt);
+        }
+
+        if (filterRequest.MinRating is not null)
+        {
+            advertQuery = advertQuery.Where(a =>
+                a.Rating >= filterRequest.MinRating);
+        }
+
+        if (filterRequest.MaxRating is not null)
+        {
+            advertQuery = advertQuery.Where(a =>
+                a.Rating <= filterRequest.MaxRating);
+        }
+
+        Expression<Func<Advert, object>> sortBy = filterRequest.SortBy switch
+        {
+            SortByFieldsForAdvert.Number => a => a.Number,
+            SortByFieldsForAdvert.AuthorName => a => a.AuthorName,
+            SortByFieldsForAdvert.Rating => a => a.Rating,
+            SortByFieldsForAdvert.CreatedAtDate => a => a.Audit.CreatedAt,
+            SortByFieldsForAdvert.UpdatedAtDate => a => a.Audit.UpdatedAt,
+            SortByFieldsForAdvert.ExpiredAtDate => a => a.ExpiredAt,
+            SortByFieldsForAdvert.Status => a => a.Status,
+            _ => a => a.Number
+        };
+
+        if (filterRequest.SortAsc)
+        {
+            advertQuery = advertQuery.OrderByDescending(sortBy);
+        }
+        else
+        {
+            advertQuery = advertQuery.OrderBy(sortBy);
+        }
+
+        var result = await advertQuery
+            .Skip((filterRequest.Page - 1) * filterRequest.PageSize)
+            .Take(filterRequest.PageSize)
+            .ToListAsync(cancellationToken);
 
         return result;
     }

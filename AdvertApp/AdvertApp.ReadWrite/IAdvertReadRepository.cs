@@ -7,7 +7,7 @@ public interface IAdvertReadRepository
 {
     Task<IEnumerable<Advert>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<IEnumerable<AdvertModel>> GetAllSortededAsync(FilterRequest filterRequest, CancellationToken cancellationToken);
+    Task<IEnumerable<Advert>> GetAllSortededAsync(FilterRequest filterRequest, CancellationToken cancellationToken);
 
     Task<Advert?> GetByIdAsync(Guid id);
 

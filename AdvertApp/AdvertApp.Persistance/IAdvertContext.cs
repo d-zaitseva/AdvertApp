@@ -1,7 +1,7 @@
 ﻿using AdvertApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdvertApp.Application;
+namespace AdvertApp.Persistance;
 
 public interface IAdvertContext
 {
