@@ -12,8 +12,6 @@ public class AdvertContext : DbContext, IAdvertContext
     public DbSet<Advert> Adverts { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
 
-    public DbSet<AdvertModel> SortedAdverts { get; set; } = null!;
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=AdvertAppDb;Trusted_Connection=True;");
@@ -49,8 +47,6 @@ public class AdvertContext : DbContext, IAdvertContext
                 .WithOne()
                 .HasForeignKey(u => u.UserId);
         });
-
-        modelBuilder.Entity<AdvertModel>(entity => entity.HasNoKey());
 
         modelBuilder.Entity<User>().HasData(
             new User { Id = Guid.NewGuid(), Name = "Admin", Role = UserRole.Admin },
