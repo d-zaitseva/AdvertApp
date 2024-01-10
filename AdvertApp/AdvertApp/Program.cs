@@ -1,4 +1,4 @@
-using AdvertApp.Applicationæ;
+using AdvertApp.Application;
 using AdvertApp.AutoMapping;
 using AdvertApp.Middleware;
 using AdvertApp.Persistance;
