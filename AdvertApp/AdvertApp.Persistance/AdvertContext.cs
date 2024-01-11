@@ -1,5 +1,4 @@
-﻿using AdvertApp.Application;
-using AdvertApp.Contracts.Enums;
+﻿using AdvertApp.Contracts.Enums;
 using AdvertApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;

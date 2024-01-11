@@ -83,9 +83,11 @@ public class AdvertRepository : IAdvertReadRepository, IAdvertWriteRepository
             advertQuery = advertQuery.OrderBy(sortBy);
         }
 
-        var result = await advertQuery
+        advertQuery = advertQuery
             .Skip((filterRequest.Page - 1) * filterRequest.PageSize)
-            .Take(filterRequest.PageSize)
+            .Take(filterRequest.PageSize);
+
+        var result = await advertQuery
             .ToListAsync(cancellationToken);
 
         return result;

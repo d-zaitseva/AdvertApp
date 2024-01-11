@@ -1,5 +1,6 @@
 ﻿using AdvertApp.Application.ApplicationServices;
 using AdvertApp.Application.ApplicationServices.Contracts;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AdvertApp.Application;
 

@@ -1,5 +1,4 @@
-﻿using AdvertApp.Application;
-using AdvertApp.Domain.Entities;
+﻿using AdvertApp.Domain.Entities;
 using AdvertApp.ReadWrite;
 using Microsoft.EntityFrameworkCore;
 
