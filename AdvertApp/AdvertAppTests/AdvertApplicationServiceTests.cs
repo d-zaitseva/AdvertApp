@@ -16,7 +16,6 @@ namespace AdvertAppTests
         private readonly Mock<IAdvertWriteRepository> _advertWriteRepository;
         private readonly Mock<IUserRepository> _userRepository;
         private readonly Mock<ILogger<IAdvertApplicationService>> _logger;
-        private readonly Mock<IConfiguration> _configuration;
         private readonly Mock<IImageApplicationService> _imageApplicationService;
         private readonly Mock<IMapper> _mapper;
 
@@ -29,7 +28,6 @@ namespace AdvertAppTests
             _advertWriteRepository = new Mock<IAdvertWriteRepository>();
             _userRepository = new Mock<IUserRepository>();
             _logger = new Mock<ILogger<IAdvertApplicationService>>();
-            _configuration = new Mock<IConfiguration>();
             var inMemorySettings = new Dictionary<string, string>();
             inMemorySettings.Add("SettingsPerUserOptions:MaxAdvertAmount", "20");
 
