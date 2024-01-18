@@ -38,7 +38,11 @@ public class AdvertController : Controller
     /// </summary>
     /// <param name="model">Model to create new advert.</param>
     /// <returns></returns>
+    /// <response code="200">When added successfully</response>
+    /// <response code="400">When an error occurred</response>
     [HttpPost(Name = "PostAdvert")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Post([FromForm] CreateAdvertFormModel model)
     {
         var response = await _advertApplicationService.AddAsync(model);
@@ -56,7 +60,11 @@ public class AdvertController : Controller
     /// </summary>
     /// <param name="model">Model to update advert.</param>
     /// <returns></returns>
+    /// <response code="200">When updated successfully</response>
+    /// <response code="400">When an error occurred</response>
     [HttpPut(Name = "PutAdvert")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Put([FromForm]UpdateAdvertFormModel model)
     {
         var response = await _advertApplicationService.Update(model);
@@ -74,9 +82,13 @@ public class AdvertController : Controller
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
+    /// <response code="200" > When deleted successfully</response>
+    /// <response code="400">When an error occurred</response>
     [Route("/softdeleteadvert")]
     [HttpDelete]
-    public async Task<ActionResult> SoftDelete([FromBody] DeleteAdvertFormModel model)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> SoftDelete([FromQuery] DeleteAdvertFormModel model)
     {
         var response = await _advertApplicationService.SoftDeleteAsync(model);
 
@@ -93,8 +105,12 @@ public class AdvertController : Controller
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
+    /// <response code="200" > When deleted successfully</response>
+    /// <response code="400">When an error occurred</response>
     [HttpDelete(Name = "DeleteAdvert")]
-    public async Task<ActionResult> Delete([FromBody] DeleteAdvertFormModel model)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> Delete([FromQuery] DeleteAdvertFormModel model)
     {
         var response = await _advertApplicationService.DeleteAsync(model);
 
