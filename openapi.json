@@ -1,0 +1,554 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Adverts API",
+    "description": "An ASP.NET Core Web API for managing Adverts",
+    "version": "v1"
+  },
+  "paths": {
+    "/Advert": {
+      "get": {
+        "tags": [
+          "Advert"
+        ],
+        "summary": "Get Collection of all Adverts.",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 5
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortByFieldsForAdvert"
+            }
+          },
+          {
+            "name": "SortAsc",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "example": true
+          },
+          {
+            "name": "Status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AdvertStatus"
+            }
+          },
+          {
+            "name": "CreatedAt",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "UpdatedAt",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "MinRating",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "MaxRating",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "FullTextSearch",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "test"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdvertViewModel"
+                  },
+                  "example": [
+                    {
+                      "id": "80befc7c-a6d6-41e8-1f0e-08dbfdbb3206",
+                      "number": 1,
+                      "userId": "db7f24c1-a46b-4bc2-a36a-b0d550f4d647",
+                      "text": "test1",
+                      "image": {
+                        "contentDisposition": null,
+                        "contentType": "image/jpeg",
+                        "headers": {
+                          "Content-Type": [
+                            "image/jpeg"
+                          ]
+                        },
+                        "length": 1759134,
+                        "name": "Image",
+                        "fileName": "sodfsajt.jpg"
+                      },
+                      "imageName": "sodfsajt.jpg",
+                      "rating": 5,
+                      "createdAt": "2023-12-16T00:14:24.287Z",
+                      "updatedAt": "2023-12-16T00:14:24.287Z",
+                      "expiredAt": null,
+                      "status": "Active"
+                    },
+                    {
+                      "id": "1a2f9b2f-f1f8-4336-1f0f-08dbfdbb3206",
+                      "number": 2,
+                      "userId": "db7f24c1-a46b-4bc2-a36a-b0d550f4d647",
+                      "text": "test2",
+                      "image": {
+                        "contentDisposition": null,
+                        "contentType": "image/jpeg",
+                        "headers": {
+                          "Content-Type": [
+                            "image/jpeg"
+                          ]
+                        },
+                        "length": 241641,
+                        "name": "Image",
+                        "fileName": "ogcqo4uj.jpg"
+                      },
+                      "imageName": "ogcqo4uj.jpg",
+                      "rating": 20,
+                      "createdAt": "2023-12-16T00:14:33.153Z",
+                      "updatedAt": "2024-01-01T15:27:36.907Z",
+                      "expiredAt": null,
+                      "status": "Active"
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdvertViewModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdvertViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Advert"
+        ],
+        "summary": "Post new advert.",
+        "operationId": "PostAdvert",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "Text",
+                  "UserId"
+                ],
+                "type": "object",
+                "properties": {
+                  "UserId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "A8B329B0-FC1E-4170-A82C-6C0714ADBB8F"
+                  },
+                  "Text": {
+                    "maxLength": 500,
+                    "type": "string",
+                    "example": "Text advert at swagger"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "UserId": {
+                  "style": "form"
+                },
+                "Text": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "When added successfully"
+          },
+          "400": {
+            "description": "When an error occurred",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Advert"
+        ],
+        "summary": "Update existing advert.",
+        "operationId": "PutAdvert",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "AdvertId",
+                  "Status",
+                  "Text",
+                  "UserId"
+                ],
+                "type": "object",
+                "properties": {
+                  "AdvertId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "64318b9f-1cdd-40f5-1f10-08dbfdbb3206"
+                  },
+                  "UserId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "db7f24c1-a46b-4bc2-a36a-b0d550f4d647"
+                  },
+                  "Text": {
+                    "maxLength": 500,
+                    "type": "string",
+                    "example": "Updated text advert at swagger"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Status": {
+                    "$ref": "#/components/schemas/AdvertStatus"
+                  }
+                }
+              },
+              "encoding": {
+                "AdvertId": {
+                  "style": "form"
+                },
+                "UserId": {
+                  "style": "form"
+                },
+                "Text": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                },
+                "Status": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "When updated successfully"
+          },
+          "400": {
+            "description": "When an error occurred",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Advert"
+        ],
+        "summary": "Delete Advert - delete completely from DB.",
+        "operationId": "DeleteAdvert",
+        "parameters": [
+          {
+            "name": "AdvertId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "UserId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "When deleted successfully"
+          },
+          "400": {
+            "description": "When an error occurred",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/softdeleteadvert": {
+      "delete": {
+        "tags": [
+          "Advert"
+        ],
+        "summary": "Delete Advert - change status of the advert into Deleted.",
+        "parameters": [
+          {
+            "name": "AdvertId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "UserId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "When deleted successfully"
+          },
+          "400": {
+            "description": "When an error occurred",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdvertStatus": {
+        "enum": [
+          0,
+          1
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "AdvertViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true
+          },
+          "imageName": {
+            "type": "string",
+            "nullable": true
+          },
+          "rating": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "expiredAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/AdvertStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "SortByFieldsForAdvert": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "type": "integer",
+        "format": "int32"
+      }
+    }
+  }
+}
